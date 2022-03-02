@@ -3,7 +3,7 @@
     <p> Siia tulevad pöördumised </p>
     <div>
       <input placeholder="Pöördumise kirjeldus" v-model="description" style="width: 400px"> <br>
-      <input placeholder="Täitmise tähtaeg (aaaa-kk-pp)" v-model="dueDate" style="width: 400px"> <br>
+      <input type="datetime-local" placeholder="Täitmise tähtaeg" v-model="dueDate" style="width: 400px"> <br>
       <button class="btn btn-primary" v-on:click="addNewTicket">Lisa pöördumine</button>
     </div>
     <div>
