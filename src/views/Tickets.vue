@@ -2,7 +2,7 @@
   <div>
     <p> Siia tulevad pöördumised </p>
     <div>
-      <input placeholder="Pöördumise kirjeldus" v-model="description" style="width: 400px"> <br>
+      <input type="text" placeholder="Pöördumise kirjeldus" v-model="description" style="width: 400px"> <br>
       <input type="datetime-local" placeholder="Täitmise tähtaeg" v-model="dueDate" style="width: 400px"> <br>
       <button class="btn btn-primary" v-on:click="addNewTicket">Lisa pöördumine</button>
     </div>
@@ -21,9 +21,9 @@
         <tr v-for="ticket in tickets">
           <!--          <td>{{ ticket.id }}</td>-->
           <!--          <td>{{ ticket.userName }}</td>-->
-          <td>{{ tickets.description }}</td>
-          <td>{{ tickets.enteredDate }}</td>
-          <td>{{ tickets.dueDate }}</td>
+          <td>{{ ticket.description }}</td>
+          <td>{{ ticket.enteredDate }}</td>
+          <td>{{ ticket.dueDate }}</td>
         </tr>
         </tbody>
       </table>
@@ -69,7 +69,6 @@ export default {
       ).then(response => {
         this.tickets = response.data
         console.log(response.data)
-        console.log(response.data.description)
       }).catch(error => {
         console.log(error)
       })
