@@ -1,20 +1,25 @@
 <template>
   <div>
-    <p> Siia tulevad pöördumised </p>
+    <h3>Täname, et pöördusite meie kasutajatoe poole!</h3>
     <div>
-      <input type="text" placeholder="Pöördumise kirjeldus" v-model="description" style="width: 400px"> <br>
-      <input type="datetime-local" placeholder="Täitmise tähtaeg" v-model="dueDate" style="width: 400px"> <br>
+      <form>
+        <textarea placeholder="Kuidas saame Teid aidata?" v-model="description"></textarea>
+      </form>
+      <br>
+      <span>Palun sisestage pöördumise lahendamise tähtaeg:</span> <br>
+      <input type="datetime-local" v-model="dueDate"> <br> <br>
       <button class="btn btn-primary" v-on:click="addNewTicket">Lisa pöördumine</button>
     </div>
+    <br>
     <div>
       <table class="table table-hover">
         <thead>
         <tr>
           <!--          <th>Ticket id</th>-->
           <!--          <th>Kasutaja</th>-->
-          <th>Sisu</th>
-          <th>Sisestatud</th>
-          <th>Tähtaeg</th>
+          <th style="width: 60%">Pöördumise kirjeldus</th>
+          <th style="width: 20%">Sisestatud</th>
+          <th style="width: 20%">Tähtaeg</th>
         </tr>
         </thead>
         <tbody>
@@ -29,7 +34,6 @@
       </table>
     </div>
   </div>
-
 </template>
 
 <script>
@@ -38,12 +42,11 @@ export default {
   data: function () {
     return {
       tickets: {},
-      id: '',
-      userName: '',
+      // id: '',
+      // userName: '',
       description: '',
       enteredDate: '',
       dueDate: '',
-
     }
   },
   methods: {
@@ -57,14 +60,11 @@ export default {
     //   })
     // },
     addNewTicket: function () {
-
       let request = {
         // userName: this.userName,
         description: this.description,
         dueDate: this.dueDate
       }
-
-      // if using alternative then remove "this." from someDtoObject
       this.$http.post("/helpdesk/new/ticket", request
       ).then(response => {
         this.tickets = response.data
@@ -78,5 +78,15 @@ export default {
 </script>
 
 <style scoped>
-
+textarea {
+  width: 600px;
+  height: 150px;
+  padding: 12px 20px;
+  box-sizing: border-box;
+  border: 2px solid #ccc;
+  border-radius: 4px;
+  background-color: #f8f8f8;
+  font-size: 16px;
+  resize: vertical;
+}
 </style>
