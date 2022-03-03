@@ -2,12 +2,17 @@
   <div>
     <h3>Täname, et pöördusite meie kasutajatoe poole!</h3>
     <div>
+      <span>Palun sisestage oma nimi: </span> <br>
+      <input placeholder="Nimi" v-model="userName"> <br>
+      <br>
+      <span>Palun kirjeldage võimalikult detailselt oma probleemi või küsimust:</span>
       <form>
         <textarea placeholder="Kuidas saame Teid aidata?" v-model="description"></textarea>
       </form>
       <br>
       <span>Palun sisestage pöördumise lahendamise tähtaeg:</span> <br>
-      <input type="datetime-local" v-model="dueDate"> <br> <br>
+      <input type="datetime-local" v-model="dueDate"> <br>
+      <br>
       <button class="btn btn-primary" v-on:click="addNewTicket">Lisa pöördumine</button>
     </div>
     <br>
@@ -15,20 +20,27 @@
       <table class="table table-hover">
         <thead>
         <tr>
-          <!--          <th>Ticket id</th>-->
-          <!--          <th>Kasutaja</th>-->
-          <th style="width: 60%">Pöördumise kirjeldus</th>
+          <th style="width: 15%">Pöörduja</th>
+          <th style="width: 40%">Pöördumise kirjeldus</th>
           <th style="width: 20%">Sisestatud</th>
           <th style="width: 20%">Tähtaeg</th>
+          <th style="width: 5%">Täidetud</th>
         </tr>
         </thead>
         <tbody>
         <tr v-for="ticket in tickets">
-          <!--          <td>{{ ticket.id }}</td>-->
-          <!--          <td>{{ ticket.userName }}</td>-->
+          <td>{{ ticket.userName }}</td>
           <td>{{ ticket.description }}</td>
           <td>{{ ticket.enteredDate }}</td>
-          <td>{{ ticket.dueDate }}</td>
+          <td>
+            <template v-if="ticket.dueDate <= ticket.enteredDate">
+              <span style="color: red"> {{ ticket.dueDate }} </span>
+            </template>
+            <template v-else>{{ ticket.dueDate }}</template>
+          </td>
+          <td>
+            <button>Täidetud</button>
+          </td>
         </tr>
         </tbody>
       </table>
@@ -42,26 +54,16 @@ export default {
   data: function () {
     return {
       tickets: {},
-      // id: '',
-      // userName: '',
+      userName: '',
       description: '',
       enteredDate: '',
       dueDate: '',
     }
   },
   methods: {
-    // showTickets: function () {
-    //   this.$http.get("/helpdesk/new/example/ticket")
-    //       .then(response => {
-    //         this.tickets = response.data
-    //         console.log(response.data)
-    //       }).catch(error => {
-    //     console.log(error)
-    //   })
-    // },
     addNewTicket: function () {
       let request = {
-        // userName: this.userName,
+        userName: this.userName,
         description: this.description,
         dueDate: this.dueDate
       }
