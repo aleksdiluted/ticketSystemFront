@@ -13,10 +13,6 @@
       <span>Palun sisestage pöördumise lahendamise tähtaeg:</span> <br>
       <input type="datetime-local" v-model="dueDate" min="2022-03-04"> <br>
       <br>
-      <span>Praegune datetime: </span>
-      <span>{{ timestamp }}</span> <br>
-<!--      <span>{{ timeNowInter }}</span> <br>-->
-<!--      <p id="demo"></p> <br>-->
       <button class="btn btn-primary" v-on:click="addNewTicket">Lisa pöördumine</button>
     </div>
     <br>
@@ -53,10 +49,6 @@
 </template>
 
 <script>
-import {LocalDateTime} from "@js-joda/core";
-
-let LocalDate;
-let nowTime;
 export default {
   name: "Tickets",
   data: function () {
@@ -67,17 +59,9 @@ export default {
       enteredDate: '',
       dueDate: '',
       dueDateMinusOneHour: '',
-      timeNow: '',
-      nowTime: '',
-      currentDate: '',
-      timestamp: '',
-      timestampDue: '',
-      timeNowInter: ''
+      timestamp: ''
     }
   },
-  var: LocalDate = require("@js-joda/core").LocalDate,
-
-
   methods: {
     addNewTicket: function () {
       let request = {
@@ -85,7 +69,6 @@ export default {
         description: this.description,
         dueDate: this.dueDate,
         dueDateMinusOneHour: this.dueDateMinusOneHour,
-        timeNow: this.timeNow
       }
       this.$http.post("/helpdesk/new/ticket", request
       ).then(response => {
@@ -95,29 +78,11 @@ export default {
         console.log(error)
       })
     },
-    // currentTime: function () {
-    //   const today = new Date();
-    //   const date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
-    //   const time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
-    //   const dateTime = date + 'T' + time;
-    //   this.timestamp = dateTime;
-    // },
-    getNow: function() {
+    getNow: function () {
       const today = new Date();
-      const date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
-      const time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
       this.timestamp = today.toISOString();
-      // this.timestamp = dateTime;
-      // document.getElementById("demo").innerHTML = today.toISOString();
-    },
-    timeNowInterval: function() {
-      const timeNowInter = this.timeNow // mõtle seda edasi
-    },
+    }
   },
-  // beforeMount() {
-  //   this.addNewTicket();
-    // this.currentTime();
-  // },
   mounted: function () {
     setInterval(function () {
       this.getNow()
