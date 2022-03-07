@@ -11,8 +11,12 @@
       </form>
       <br>
       <span>Palun sisestage pöördumise lahendamise tähtaeg:</span> <br>
-      <input type="datetime-local" v-model="dueDate"> <br>
+      <input type="datetime-local" v-model="dueDate" min="2022-03-04"> <br>
       <br>
+      <span>Praegune datetime: </span>
+      <span>{{ timestamp }}</span> <br>
+<!--      <span>{{ timeNowInter }}</span> <br>-->
+<!--      <p id="demo"></p> <br>-->
       <button class="btn btn-primary" v-on:click="addNewTicket">Lisa pöördumine</button>
     </div>
     <br>
@@ -20,7 +24,7 @@
       <table class="table table-hover">
         <thead>
         <tr>
-          <th style="width: 15%">Pöörduja</th>
+          <th style="width: 15%">Pöörduja nimi</th>
           <th style="width: 40%">Pöördumise kirjeldus</th>
           <th style="width: 20%">Sisestatud</th>
           <th style="width: 20%">Tähtaeg</th>
@@ -33,8 +37,8 @@
           <td>{{ ticket.description }}</td>
           <td>{{ ticket.enteredDate }}</td>
           <td>
-            <template v-if="ticket.dueDate <= ticket.enteredDate">
-              <span style="color: red"> {{ ticket.dueDate }} </span>
+            <template v-if="ticket.dueDateMinusOneHour <= timestamp">
+              <span style="color: red">{{ ticket.dueDate }}</span>
             </template>
             <template v-else>{{ ticket.dueDate }}</template>
           </td>
@@ -49,6 +53,10 @@
 </template>
 
 <script>
+import {LocalDateTime} from "@js-joda/core";
+
+let LocalDate;
+let nowTime;
 export default {
   name: "Tickets",
   data: function () {
@@ -58,14 +66,26 @@ export default {
       description: '',
       enteredDate: '',
       dueDate: '',
+      dueDateMinusOneHour: '',
+      timeNow: '',
+      nowTime: '',
+      currentDate: '',
+      timestamp: '',
+      timestampDue: '',
+      timeNowInter: ''
     }
   },
+  var: LocalDate = require("@js-joda/core").LocalDate,
+
+
   methods: {
     addNewTicket: function () {
       let request = {
         userName: this.userName,
         description: this.description,
-        dueDate: this.dueDate
+        dueDate: this.dueDate,
+        dueDateMinusOneHour: this.dueDateMinusOneHour,
+        timeNow: this.timeNow
       }
       this.$http.post("/helpdesk/new/ticket", request
       ).then(response => {
@@ -74,8 +94,35 @@ export default {
       }).catch(error => {
         console.log(error)
       })
-    }
+    },
+    // currentTime: function () {
+    //   const today = new Date();
+    //   const date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
+    //   const time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+    //   const dateTime = date + 'T' + time;
+    //   this.timestamp = dateTime;
+    // },
+    getNow: function() {
+      const today = new Date();
+      const date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
+      const time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+      this.timestamp = today.toISOString();
+      // this.timestamp = dateTime;
+      // document.getElementById("demo").innerHTML = today.toISOString();
+    },
+    timeNowInterval: function() {
+      const timeNowInter = this.timeNow // mõtle seda edasi
+    },
   },
+  // beforeMount() {
+  //   this.addNewTicket();
+    // this.currentTime();
+  // },
+  mounted: function () {
+    setInterval(function () {
+      this.getNow()
+    }.bind(this), 1000)
+  }
 }
 </script>
 
