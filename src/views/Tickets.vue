@@ -28,7 +28,7 @@
         </tr>
         </thead>
         <tbody>
-        <tr v-for="ticket in tickets">
+        <tr v-for="ticket in sortedTickets">
           <td>{{ ticket.userName }}</td>
           <td>{{ ticket.description }}</td>
           <td>{{ ticket.enteredDate }}</td>
@@ -49,6 +49,8 @@
 </template>
 
 <script>
+import _ from "lodash";
+
 export default {
   name: "Tickets",
   data: function () {
@@ -59,7 +61,8 @@ export default {
       enteredDate: '',
       dueDate: '',
       dueDateMinusOneHour: '',
-      timestamp: ''
+      timestamp: '',
+      sortedTickets: {}
     }
   },
   methods: {
@@ -73,6 +76,8 @@ export default {
       this.$http.post("/helpdesk/new/ticket", request
       ).then(response => {
         this.tickets = response.data
+        this.sortedTickets =  _.orderBy(this.tickets, 'dueDate', 'desc');
+
         console.log(response.data)
       }).catch(error => {
         console.log(error)
