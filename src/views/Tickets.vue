@@ -28,7 +28,7 @@
         </tr>
         </thead>
         <tbody>
-        <tr v-for="ticket in sortedTickets">
+        <tr v-for="(ticket, index) in sortedTickets" :key="index">
           <td>{{ ticket.userName }}</td>
           <td>{{ ticket.description }}</td>
           <td>{{ ticket.enteredDate }}</td>
@@ -39,7 +39,7 @@
             <template v-else>{{ ticket.dueDate }}</template>
           </td>
           <td>
-            <button>Täidetud</button>
+            <button class="btn btn-primary" v-on:click="removeTicket(index)">Täidetud</button>
           </td>
         </tr>
         </tbody>
@@ -71,13 +71,12 @@ export default {
         userName: this.userName,
         description: this.description,
         dueDate: this.dueDate,
-        dueDateMinusOneHour: this.dueDateMinusOneHour,
+        dueDateMinusOneHour: this.dueDateMinusOneHour
       }
       this.$http.post("/helpdesk/new/ticket", request
       ).then(response => {
         this.tickets = response.data
-        this.sortedTickets =  _.orderBy(this.tickets, 'dueDate', 'desc');
-
+        this.sortedTickets = _.orderBy(this.tickets, 'dueDate', 'desc');
         console.log(response.data)
       }).catch(error => {
         console.log(error)
@@ -86,6 +85,9 @@ export default {
     getNow: function () {
       const today = new Date();
       this.timestamp = today.toISOString();
+    },
+    removeTicket: function (index) {
+      this.$delete(this.sortedTickets, index);
     }
   },
   mounted: function () {
